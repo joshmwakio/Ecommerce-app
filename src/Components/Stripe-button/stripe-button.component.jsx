@@ -9,7 +9,7 @@ const StripeCheckoutButton=({price})=>{
 
     return(
         <StripeCheckout label='Pay Now' name='Josh Crwn Clothings' billingAddress shippingAddress 
-        description={`Your Total price is $${price}`} 
+        description={`Your Total price is Ksh ${price}`} 
         stripeKey={publishableKey} amount={priceForStripe}
         token={onToken} panelLabel='Pay Now'/>
     )

@@ -31,7 +31,7 @@ const Checkout=({cartItems,total})=>(
             ))
         }
         <div className='total'>
-            <span> TOTAL:${total}</span>
+            <span> TOTAL: Ksh {total}</span>
         </div>
         <StripeCheckoutButton price={total}/>
     </div>
