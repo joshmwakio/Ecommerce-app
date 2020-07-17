@@ -7,9 +7,10 @@ import ShopPage from './Pages/Shoppage/shoppage.page'
 import Header from './Components/Header/header.component.jsx'
 import SignInAndSignUpPage from './Pages/SignIn&SignUpPage/sign-in&sign-up.page';
 import CheckoutPage from './Pages/Checkout/checkout.page.jsx'
-import {auth,firestore} from './firebase/firebase.utils'
+import {auth,firestore,addShopCategoriesAnditems} from './firebase/firebase.utils'
 import {connect} from 'react-redux'
 import {createStructuredSelector} from 'reselect'
+import {selectCollectionForPreview} from './redux/collections/collections.selectors'
 import {selectCurrentUser} from './redux/user/user.selector'
 import {setCurrentUser} from './redux/user/user.actions'
 class App extends React.Component{
@@ -22,16 +23,16 @@ componentDidMount()
 {
 //an open subscription
   this.unsubscribeFromAuth=auth.onAuthStateChanged(async userAuth=>{
-  const {setCurrentUser}=this.props;
+  const {setCurrentUser,shopData}=this.props;
+ // console.log(shopData);
+  //addShopCategoriesAnditems('collections',shopData.map(({items,title})=>({items,title})));
     if(userAuth){
       try{
         const userRef= firestore.doc(`users/${userAuth.uid}`);
         userRef.onSnapshot(snapshot=>{
           setCurrentUser({
-            currentUser:{
               id:snapshot.id,
               ...snapshot.data()
-            }
           },()=>{
             console.log(this.state)
           })
@@ -72,7 +73,8 @@ render(){
 }
 }
 const mapStateToProps=createStructuredSelector({
-  currentUser:selectCurrentUser
+  currentUser:selectCurrentUser,
+  shopData:selectCollectionForPreview
 })
 
 

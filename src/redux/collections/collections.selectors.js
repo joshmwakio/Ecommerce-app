@@ -7,8 +7,10 @@ export const selectCollectionShopData=createSelector(
 )
 
 export const selectCategory=(categotyUrlParamater)=>createSelector(
-    [selectCollectionShopData], categories=>categories[categotyUrlParamater]
+    [selectCollectionShopData], categories=> categories? categories[categotyUrlParamater]:null
 )
-
+export const selectisCollectionFetching=createSelector(
+    [selectCollection],collection=>collection.isFetching
+)
 export const selectCollectionForPreview=createSelector([selectCollectionShopData], collections=>
-    Object.keys(collections).map(key=>collections[key]))
+    collections ? Object.keys(collections).map(key=>collections[key]):[])
