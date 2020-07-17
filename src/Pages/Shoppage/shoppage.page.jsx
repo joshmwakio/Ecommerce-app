@@ -17,8 +17,11 @@ class ShopPage extends React.Component{
         const {fetchCollectionAsync}=this.props;
         fetchCollectionAsync();
     }
-
-
+    
+    componentWillMount(){
+        const {fetchCollectionAsync}=this.props;
+        fetchCollectionAsync();
+    }
     render(){
         const {match,isLoading}=this.props;
         const CollectionsOverViewWithSpinner=WithSpinner(CollectionOverview);
