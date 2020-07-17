@@ -13,12 +13,16 @@ class ShopPage extends React.Component{
 
     unsubscribeFromSnapshot=null;
     
-    componentDidMount(){
+
+    // componentDidCatch(){
+    //     const {fetchCollectionAsync}=this.props;
+    //     fetchCollectionAsync();
+    // }
+    componentWillMount(){
         const {fetchCollectionAsync}=this.props;
         fetchCollectionAsync();
     }
-    
-    componentWillMount(){
+    componentDidMount(){
         const {fetchCollectionAsync}=this.props;
         fetchCollectionAsync();
     }
