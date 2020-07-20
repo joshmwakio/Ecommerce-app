@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 
 import {Route,Redirect} from 'react-router-dom'
@@ -7,79 +7,36 @@ import ShopPage from './Pages/Shoppage/shoppage.page'
 import Header from './Components/Header/header.component.jsx'
 import SignInAndSignUpPage from './Pages/SignIn&SignUpPage/sign-in&sign-up.page';
 import CheckoutPage from './Pages/Checkout/checkout.page.jsx'
-import {auth,firestore,addShopCategoriesAnditems} from './firebase/firebase.utils'
+
 import {connect} from 'react-redux'
 import {createStructuredSelector} from 'reselect'
-import {selectCollectionForPreview} from './redux/collections/collections.selectors'
+
 import {selectCurrentUser} from './redux/user/user.selector'
-import {setCurrentUser} from './redux/user/user.actions'
-class App extends React.Component{
+import {CheckUserSession} from './redux/user/user.actions'
 
+const App=({checkUserSession,currentUser})=>{
 
-unsubscribeFromAuth=null;
-
-
-componentDidMount()
-{
-//an open subscription
-  this.unsubscribeFromAuth=auth.onAuthStateChanged(async userAuth=>{
-  const {setCurrentUser,shopData}=this.props;
- // console.log(shopData);
-  //addShopCategoriesAnditems('collections',shopData.map(({items,title})=>({items,title})));
-    if(userAuth){
-      try{
-        const userRef= firestore.doc(`users/${userAuth.uid}`);
-        userRef.onSnapshot(snapshot=>{
-          setCurrentUser({
-              id:snapshot.id,
-              ...snapshot.data()
-          },()=>{
-            console.log(this.state)
-          })
-        })
-      }
-      catch(error){
-        console.log(error);
-      }
-  
-    }
-    else{
-      setCurrentUser(null)
-    }
-    
-
-   
-  });
-
-}
-
-componentWillUnmount(){
-  this.unsubscribeFromAuth();
-}
-
-
-
-render(){
-
+useEffect(()=>{
+  checkUserSession()
+},[checkUserSession])
   return (
     <div>
       <Header/>
       <Route exact path='/' component={HomePage}/>
       <Route path='/shop' component={ShopPage}/>
-      <Route exact path='/signIn'  render={()=>this.props.currentUser?(< Redirect to='/'/>):(<SignInAndSignUpPage/>)} />
+      <Route exact path='/signIn'  render={()=>currentUser?(< Redirect to='/'/>):(<SignInAndSignUpPage/>)} />
       <Route exact path='/checkout' component={CheckoutPage}/>
       </div>
   );
 }
-}
+
+
 const mapStateToProps=createStructuredSelector({
   currentUser:selectCurrentUser,
-  shopData:selectCollectionForPreview
 })
 
-
-const mapDispatchToProps=dispatch=>({
-  setCurrentUser:user=>dispatch(setCurrentUser(user))
+const mapDispatchToProps=(dispatch)=>({
+  checkUserSession:()=>dispatch(CheckUserSession())
 })
 
 export default connect(mapStateToProps,mapDispatchToProps) (App);

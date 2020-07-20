@@ -19,5 +19,7 @@ export const reduceItemFromCart=(item)=>({
     type:cartActionTypes.REDUCE_ITEM_FROM_CART,
     payload:item
 })
-
+export const clearAllItemsFromCart=()=>({
+    type:cartActionTypes.CLEAR_ALL_ITEMS
+})
 

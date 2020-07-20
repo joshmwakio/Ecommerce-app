@@ -1,12 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {createStructuredSelector} from 'reselect'
 import {selectCategory} from '../../redux/collections/collections.selectors'
 import CollectionItem from '../../Components/Collection-item/collection-item.component'
 import './category.styles.scss'
 
 import {CategoryPageContainer,ItemsContainer,TitleContainer} from './category.styles'
-const CategoryPage=({match,collection})=>{
+const CategoryPage=({collection})=>{
     console.log(collection)
     const {title, items}=collection
 return(

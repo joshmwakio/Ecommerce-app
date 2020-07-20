@@ -18,6 +18,10 @@ const cartReducer=(state=INITIAL_STATE, action)=>{
             return{
                 ...state,cartItems:clearItemFromCart(state.cartItems,action.payload)
             }
+        case cartActionTypes.CLEAR_ALL_ITEMS:
+            return{
+                ...state,cartItems:[]
+            }
         case cartActionTypes.REDUCE_ITEM_FROM_CART:
             return{
                 ...state,cartItems:reduceItemFromCart(state.cartItems,action.payload)

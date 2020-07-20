@@ -1,68 +1,60 @@
-import React from 'react'
+import React, {useState} from 'react'
 import FormInput from '../Form-input-Component/form-input.component'
 import CustomButton from '../Custom-button/custom-button.component'
+import {connect} from 'react-redux'
+import {emailSignUpStart} from '../../redux/user/user.actions'
 
-import{auth,createUserProfileDocument}from '../../firebase/firebase.utils'
 
 import './signup.styles.scss';
-class SignUp extends React.Component{
-    constructor(){
-        super();
-        this.state={
-            displayName:'',
-            email:'',
-            password:'',
-            confirmPassword:''
-        }
-    }
 
-    handleSubmit=async event=>{
+
+
+
+const SignUp=({signUpWithEmailAndPassword})=>{
+    const [userCredentials,setUserCredentials]=useState({ 
+        displayName:'',
+        email:'',
+        password:'',
+        confirmPassword:''
+        })
+    
+
+    const {displayName,email,password,confirmPassword}=userCredentials
+    const handleSubmit=async event=>{
         event.preventDefault();
-        const{displayName,email,password,confirmPassword}=this.state;
+
         if(password!==confirmPassword){
             alert('passwords dont match');
             
             return
         }
-        try{
-            await auth.createUserWithEmailAndPassword(email,password).then(
-                ()=>{
-                    createUserProfileDocument(auth.currentUser,{displayName});
-                }
-            );
-            
-        }
-        catch(error){
-            console.log(error);
-        }
-            this.setState({
+
+        signUpWithEmailAndPassword({email,password,displayName})
+       
+         setUserCredentials({
                 displayName:'',
                 email:'',
                 password:'',
                 confirmPassword:''
-            })
-
-        
+            })        
     }
-    handleChange=event=>{
+    const handleChange=event=>{
         const {name,value}=event.target;
-        this.setState({[name]:value})
+        setUserCredentials({...userCredentials,[name]:value})
     }
-    render(){
-        const{displayName,email,password,confirmPassword}=this.state
         return(
             <div className='sign-up'>
                 <h2 className='title'> I do not have an account</h2>
                 <span>Sign up with your email and password</span>
-                <form className='sign-up-form' onSubmit={this.handleSubmit}>
+                <form className='sign-up-form' onSubmit={handleSubmit}>
 
-                    <FormInput type='text' name='displayName' value={displayName} handleChange={this.handleChange}
+                    <FormInput type='text' name='displayName' value={displayName} handleChange={handleChange}
                     label='User name' required />
-                    <FormInput type='email' name='email' value={email} handleChange={this.handleChange}
+                    <FormInput type='email' name='email' value={email} handleChange={handleChange}
                     label='Email' required />
-                    <FormInput type='password' name='password' value={password} handleChange={this.handleChange}
+                    <FormInput type='password' name='password' value={password} handleChange={handleChange}
                     label='Password' required />
-                    <FormInput type='password' name='confirmPassword' value={confirmPassword} handleChange={this.handleChange}
+                    <FormInput type='password' name='confirmPassword' value={confirmPassword} handleChange={handleChange}
                     label='Confirm password' required />
 
                     <CustomButton type='submit'>SIGN UP</CustomButton>
@@ -72,5 +64,9 @@ class SignUp extends React.Component{
 
         );
     }
-}
-export default SignUp;
+
+const mapDispatchToProps=(dispatch)=>({
+    signUpWithEmailAndPassword:(userAuth)=>dispatch(emailSignUpStart(userAuth))
+})
+
+export default connect(null,mapDispatchToProps)(SignUp);

@@ -32,7 +32,9 @@ export const createUserProfileDocument=async (userAuth,additionalData)=>{
     else{
        
         const userRef=firestore.doc(`users/${userAuth.uid}`);
+        
         const snapshot=await userRef.get();
+        console.log(snapshot.exists);
         if(!snapshot.exists){
             const{displayName,email}=userAuth;
             console.log(displayName);
@@ -83,6 +85,17 @@ return transformedCollections.reduce((accumulator,collection)=>{
 
 
 }
+
+export const getCurrentUser=()=>{
+    return new Promise((resolve,reject)=>{
+        const unsubscribeFromAuth=auth.onAuthStateChanged(
+        userAuth=>{
+            unsubscribeFromAuth();
+            resolve(userAuth) 
+        },reject)
+})
+}
+
 export default firebase;
 
 
